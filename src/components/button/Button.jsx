@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
+import LoadingSpinner from '../loading/LoadingSpiner'
 
 const ButtonStyles = styled.button`
   cursor: pointer;
@@ -41,20 +42,22 @@ const ButtonStyles = styled.button`
  * @requires
  * @param {string} type Type of button 'button' | 'submit'
  */
-const Button = ({ type = 'button', onClick = () => {}, children, kind = 'primary', ...props }) => {
+const Button = ({ type = 'button', onClick = () => {}, children, kind = 'primary', isLoading, ...props }) => {
   const { to } = props
+  // eslint-disable-next-line no-extra-boolean-cast
+  const child = !!isLoading ? <LoadingSpinner /> : children
   if (to !== '' && typeof to === 'string') {
     return (
       <NavLink to={to} className='inline-block'>
         <ButtonStyles type={type} kind={kind} {...props}>
-          {children}
+          {child}
         </ButtonStyles>
       </NavLink>
     )
   }
   return (
     <ButtonStyles type={type} kind={kind} onClick={onClick} {...props}>
-      {children}
+      {child}
     </ButtonStyles>
   )
 }
