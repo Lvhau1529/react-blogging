@@ -12,7 +12,6 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { auth, db } from '../firebase-app/firebase-config'
 import { addDoc, collection } from 'firebase/firestore/lite'
 import AuthenticationPage from './AuthenticationPage'
-import { useAuth } from '../contexts/auth-context'
 import { NavLink, useNavigate } from 'react-router-dom'
 
 const schema = yup.object({
