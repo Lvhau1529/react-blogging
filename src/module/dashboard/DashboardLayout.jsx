@@ -22,7 +22,7 @@ const DashboardStyles = styled.div`
     }
   }
 `
-const DashboardLayout = ({ children }) => {
+const DashboardLayout = () => {
   return (
     <DashboardStyles>
       <DashboardHeader></DashboardHeader>
