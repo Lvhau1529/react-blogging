@@ -1,31 +1,29 @@
+import { useEffect, useState } from 'react'
+import { useAuth } from '../contexts/auth-context'
+import { NavLink, useNavigate } from 'react-router-dom'
+import AuthenticationPage from './AuthenticationPage'
+import { Field } from '../components/field'
 import { Label } from '../components/label'
 import Input from '../components/input/Input'
 import { useForm } from 'react-hook-form'
 import { IconEyeClose, IconEyeOpen } from '../components/icons'
-import { Field } from '../components/field'
-import { useEffect, useState } from 'react'
 import { Button } from '../components/button'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { toast } from 'react-toastify'
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
-import { auth, db } from '../firebase-app/firebase-config'
-import { addDoc, collection } from 'firebase/firestore/lite'
-import AuthenticationPage from './AuthenticationPage'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { auth } from '../firebase-app/firebase-config'
+import { signInWithEmailAndPassword } from 'firebase/auth'
 
 const schema = yup.object({
-  fullname: yup.string().required('Please enter your fullname'),
   email: yup.string().email('Please enter valid email address').required('Please enter your email address'),
   password: yup
     .string()
     .min(8, 'Your password must be at least 8 characters or greater')
     .required('Please enter your password')
 })
-
-const SignUpPage = () => {
-  const colRef = collection(db, 'users')
+const SignInPage = () => {
   const navigate = useNavigate()
+  const { userInfo } = useAuth()
   const {
     control,
     handleSubmit,
@@ -47,34 +45,29 @@ const SignUpPage = () => {
   }, [errors])
 
   useEffect(() => {
-    document.title = 'Register Page'
-  }, [])
+    document.title = 'Login Page'
+    if (userInfo?.email) navigate('/')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userInfo])
 
-  const handleSignUp = async (values) => {
+  const handleSignIn = async (values) => {
     if (!isValid) return
-    await createUserWithEmailAndPassword(auth, values.email, values.password)
-    await updateProfile(auth.currentUser, {
-      displayName: values.fullname
-    })
-    await addDoc(colRef, {
-      name: values.fullname,
-      email: values.email,
-      password: values.password
-    })
-    toast.success('Create user successfully', {
-      pauseOnHover: false,
-      delay: 100
-    })
-    navigate('/')
+    try {
+      await signInWithEmailAndPassword(auth, values.email, values.password)
+      toast.success('Login successfully', {
+        pauseOnHover: false,
+        delay: 100
+      })
+      navigate('/')
+    } catch (error) {
+      if (error.message.includes('wrong-password')) toast.error('It seems your password was wrong')
+    }
   }
+
   return (
     <>
       <AuthenticationPage>
-        <form className='max-w-[800px] mx-auto' onSubmit={handleSubmit(handleSignUp)} autoComplete='off'>
-          <Field>
-            <Label htmlFor='fullname'>Fullname</Label>
-            <Input name='fullname' type='text' placeholder='Enter your name' control={control} />
-          </Field>
+        <form className='max-w-[800px] mx-auto' onSubmit={handleSubmit(handleSignIn)} autoComplete='off'>
           <Field>
             <Label htmlFor='email'>Email</Label>
             <Input name='email' type='email' placeholder='Enter your email' control={control} />
@@ -95,7 +88,7 @@ const SignUpPage = () => {
             </Input>
           </Field>
           <div className='have-account'>
-            You already have an account? <NavLink to={'/sign-in'}>Login</NavLink>{' '}
+            You have not had an account? <NavLink to={'/sign-up'}>Register an account</NavLink>{' '}
           </div>
           <Button
             type='submit'
@@ -104,7 +97,7 @@ const SignUpPage = () => {
             isLoading={isSubmitting}
             disabled={isSubmitting}
           >
-            Sign up
+            Sign in
           </Button>
         </form>
       </AuthenticationPage>
@@ -112,4 +105,4 @@ const SignUpPage = () => {
   )
 }
 
-export default SignUpPage
+export default SignInPage
