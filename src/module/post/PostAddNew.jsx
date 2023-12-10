@@ -1,105 +1,111 @@
-import { Button } from "@/components/button";
-import { Radio } from "@/components/checkbox";
-import { Field } from "@/components/field";
-import { Input } from "@/components/input";
-import { Label } from "@/components/label";
-import { Dropdown } from "@/components/dropdown";
-import { useForm } from "react-hook-form";
-import styled from "styled-components";
-
-const PostAddNewStyles = styled.div``;
+import {Button} from '@/components/button'
+import {Radio} from '@/components/checkbox'
+import {Field} from '@/components/field'
+import {Input} from '@/components/input'
+import {Label} from '@/components/label'
+import {useForm} from 'react-hook-form'
+import slugify from 'slugify'
+import {postStatus} from '../../utils/constants'
+import DashboardHeading from '../dashboard/DashboardHeading.jsx'
+import {FieldCheckboxes} from '../../components/field'
+import ImageUpload from '../../components/image/ImageUpload'
+import useFirebaseImage from '../../hooks/useFirebaseImage'
 
 const PostAddNew = () => {
-  const { control, watch, setValue } = useForm({
-    mode: "onChange",
+  const {control, watch, setValue, handleSubmit, getValues, reset} = useForm({
+    mode: 'onChange',
     defaultValues: {
-      status: "",
-      category: "",
-    },
-  });
-  const watchStatus = watch("status");
-  const watchCategory = watch("category");
-  console.log("PostAddNew ~ watchCategory", watchCategory);
-  
+      title: '',
+      slug: '',
+      status: 2,
+      hot: false,
+      image: '',
+      category: {},
+      user: {}
+    }
+  })
+  const {
+    image,
+    handleResetUpload,
+    progress,
+    handleSelectImage,
+    handleDeleteImage
+  } = useFirebaseImage(setValue, getValues)
+  const watchStatus = watch('status')
+
+  const addPostHandler = async (values) => {
+    values.slug = slugify(values.slug || values.title)
+    handleResetUpload()
+    console.log('addPostHandler ~ values:', values)
+  }
+
   return (
-    <PostAddNewStyles>
-      <h1 className="dashboard-heading">Add new post</h1>
-      <form>
-        <div className="grid grid-cols-2 gap-x-10 mb-10">
+    <>
+      <DashboardHeading title='Add post' desc='Add new post'></DashboardHeading>
+      <form onSubmit={handleSubmit(addPostHandler)}>
+        <div className='form-layout'>
           <Field>
             <Label>Title</Label>
             <Input
               control={control}
-              placeholder="Enter your title"
-              name="title"
-            ></Input>
+              placeholder='Enter your title'
+              name='title'
+              required></Input>
           </Field>
           <Field>
             <Label>Slug</Label>
             <Input
               control={control}
-              placeholder="Enter your slug"
-              name="slug"
-            ></Input>
+              placeholder='Enter your slug'
+              name='slug'></Input>
           </Field>
         </div>
-        <div className="grid grid-cols-2 gap-x-10 mb-10">
+        <div className='form-layout'>
+          <Field>
+            <Label>Image</Label>
+            <ImageUpload
+              onChange={handleSelectImage}
+              handleDeleteImage={handleDeleteImage}
+              className='h-[250px]'
+              progress={progress}
+              image={image}
+            />
+          </Field>
+        </div>
+        <div className='form-layout'>
           <Field>
             <Label>Status</Label>
-            <div className="flex items-center gap-x-5">
+            <FieldCheckboxes>
               <Radio
-                name="status"
+                name='status'
                 control={control}
-                checked={watchStatus === "approved"}
-                onClick={() => setValue("status", "approved")}
-                value="approved"
-              >
+                checked={Number(watchStatus) === postStatus.APPROVED}
+                value={postStatus.APPROVED}>
                 Approved
               </Radio>
               <Radio
-                name="status"
+                name='status'
                 control={control}
-                checked={watchStatus === "pending"}
-                onClick={() => setValue("status", "pending")}
-                value="pending"
-              >
+                checked={Number(watchStatus) === postStatus.PENDING}
+                value={postStatus.PENDING}>
                 Pending
               </Radio>
               <Radio
-                name="status"
+                name='status'
                 control={control}
-                checked={watchStatus === "reject"}
-                onClick={() => setValue("status", "reject")}
-                value="reject"
-              >
+                checked={Number(watchStatus) === postStatus.REJECTED}
+                value={postStatus.REJECTED}>
                 Reject
               </Radio>
-            </div>
-          </Field>
-          <Field>
-            <Label>Author</Label>
-            <Input control={control} placeholder="Find the author"></Input>
+            </FieldCheckboxes>
           </Field>
         </div>
-        <div className="grid grid-cols-2 gap-x-10 mb-10">
-          <Field>
-            <Label>Category</Label>
-            <Dropdown>
-              <Dropdown.Option>Knowledge</Dropdown.Option>
-              <Dropdown.Option>Blockchain</Dropdown.Option>
-              <Dropdown.Option>Setup</Dropdown.Option>
-              <Dropdown.Option>Nature</Dropdown.Option>
-              <Dropdown.Option>Developer</Dropdown.Option>
-            </Dropdown>
-          </Field>
-          <Field></Field>
-        </div>
-        <Button type="submit" className="mx-auto">
+        <Button type='submit' className='mx-auto w-[250px]'>
           Add new post
         </Button>
       </form>
-    </PostAddNewStyles>
-  );
-};
+    </>
+  )
+}
 
-export default PostAddNew;
+export default PostAddNew
