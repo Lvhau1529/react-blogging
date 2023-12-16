@@ -12,6 +12,7 @@ const PostFeatureItem = ({ data }) => {
     : new Date();
   const formatDate = new Date(date).toLocaleDateString("vi-VI");
   const { category, user } = data;
+  
   return (
     <PostFeatureItemStyles>
       <PostImage url={data.image} alt="unsplash"></PostImage>

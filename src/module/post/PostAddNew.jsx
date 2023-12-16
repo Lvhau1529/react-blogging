@@ -25,8 +25,10 @@ import {
 } from 'firebase/firestore'
 import {db} from '../../firebase-app/firebase-config'
 import {toast} from 'react-toastify'
+import {useAuth} from '@/contexts/auth-context'
 
 const PostAddNew = () => {
+  const {userInfo} = useAuth()
   const {control, watch, setValue, handleSubmit, getValues, reset} = useForm({
     mode: 'onChange',
     defaultValues: {
@@ -50,6 +52,26 @@ const PostAddNew = () => {
   const watchHot = watch('hot')
   const [categories, setCategories] = useState([])
   const [selectCategory, setSelectCategory] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    async function fetchUserData() {
+      if (!userInfo.email) return
+      const q = query(
+        collection(db, 'users'),
+        where('email', '==', userInfo.email)
+      )
+      const querySnapshot = await getDocs(q)
+      querySnapshot.forEach((doc) => {
+        setValue('user', {
+          id: doc.id,
+          ...doc.data()
+        })
+      })
+    }
+    fetchUserData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userInfo.email])
 
   useEffect(() => {
     getData()
@@ -74,28 +96,34 @@ const PostAddNew = () => {
   }
 
   const addPostHandler = async (values) => {
-    const cloneValues = {...values}
-    cloneValues.slug = slugify(values.slug || values.title, {lower: true})
-    cloneValues.status = Number(values.status)
-    const colRef = await collection(db, 'posts')
-    await addDoc(colRef, {
-      ...cloneValues,
-      image,
-      createdAt: serverTimestamp()
-    })
-    toast.success('Create new post successfully!')
-    reset({
-      title: '',
-      slug: '',
-      status: 2,
-      category: {},
-      hot: false,
-      image: '',
-      user: {}
-    })
-    handleResetUpload()
-    setSelectCategory({})
-    console.log('addPostHandler ~ values:', values)
+    setLoading(true)
+    try {
+      const cloneValues = {...values}
+      cloneValues.slug = slugify(values.slug || values.title, {lower: true})
+      cloneValues.status = Number(values.status)
+      const colRef = collection(db, 'posts')
+      await addDoc(colRef, {
+        ...cloneValues,
+        image,
+        createdAt: serverTimestamp()
+      })
+      toast.success('Create new post successfully!')
+      reset({
+        title: '',
+        slug: '',
+        status: 2,
+        category: {},
+        hot: false,
+        image: '',
+        user: {}
+      })
+      handleResetUpload()
+      setSelectCategory({})
+    } catch (error) {
+      setLoading(false)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleClickOption = async (item) => {
@@ -196,7 +224,11 @@ const PostAddNew = () => {
             </FieldCheckboxes>
           </Field>
         </div>
-        <Button type='submit' className='mx-auto w-[250px]'>
+        <Button
+          type='submit'
+          className='mx-auto w-[250px]'
+          isLoading={loading}
+          disabled={loading}>
           Add new post
         </Button>
       </form>
