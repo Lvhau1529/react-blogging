@@ -13,6 +13,7 @@ import SignInPage from "./pages/SignInPage"
 import SignUpPage from "./pages/SignUpPage"
 import CategoryManage from "./module/category/CategoryManage"
 import CategoryAddNew from "./module/category/CategoryAddNew"
+import CategoryUpdate from "./module/category/CategoryUpdate"
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
               <Route path='/manage/add-post' element={<PostAddNew />} />
               <Route path='/manage/category' element={<CategoryManage />} />
               <Route path='/manage/add-category' element={<CategoryAddNew />} />
+              <Route path='/manage/update-category' element={<CategoryUpdate />} />
             </Route>
           </Routes>
         </AuthProvider>
