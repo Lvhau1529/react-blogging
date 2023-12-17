@@ -9,5 +9,5 @@
   "semi": false,
   "printWidth": 80,
   "jsxBracketSameLine": true,
-  "bracketSpacing": false
+  "bracketSpacing": true
 }
