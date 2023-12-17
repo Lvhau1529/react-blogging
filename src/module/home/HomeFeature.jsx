@@ -1,4 +1,3 @@
-import { db } from "@/firebase-app/firebase-config";
 import {
   collection,
   limit,
@@ -6,9 +5,10 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import PostFeatureItem from "@/module/post/PostFeatureItem";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import PostFeatureItem from "@/module/post/PostFeatureItem";
+import { db } from "@/firebase-app/firebase-config";
 import Heading from "@/components/layouts/Heading";
 const HomeFeatureStyles = styled.div``;
 

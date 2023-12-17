@@ -1,7 +1,7 @@
-import styled, { css } from 'styled-components'
-import PropTypes from 'prop-types'
-import { NavLink } from 'react-router-dom'
-import LoadingSpinner from '../loading/LoadingSpiner'
+import styled, { css } from "styled-components"
+import PropTypes from "prop-types"
+import { NavLink } from "react-router-dom"
+import LoadingSpinner from "../loading/LoadingSpiner"
 
 const ButtonStyles = styled.button`
   cursor: pointer;
@@ -10,24 +10,24 @@ const ButtonStyles = styled.button`
   border-radius: 8px;
   font-weight: 600;
   font-size: 16px;
-  height: ${(props) => props.height || '66px'};
+  height: ${(props) => props.height || "66px"};
   display: flex;
   justify-content: center;
   align-items: center;
   ${(props) =>
-    props.kind === 'secondary' &&
+    props.kind === "secondary" &&
     css`
       color: ${(props) => props.theme.primary};
       background-color: white;
     `};
   ${(props) =>
-    props.kind === 'primary' &&
+    props.kind === "primary" &&
     css`
       color: white;
       background-color: ${(props) => props.theme.primary};
     `};
   ${(props) =>
-    props.kind === 'ghost' &&
+    props.kind === "ghost" &&
     css`
       color: ${(props) => props.theme.primary};
       background-color: rgba(29, 192, 113, 0.1);
@@ -42,11 +42,11 @@ const ButtonStyles = styled.button`
  * @requires
  * @param {string} type Type of button 'button' | 'submit'
  */
-const Button = ({ type = 'button', onClick = () => {}, children, kind = 'primary', isLoading, ...props }) => {
+const Button = ({ type = "button", onClick = () => {}, children, kind = "primary", isLoading, ...props }) => {
   const { to } = props
   // eslint-disable-next-line no-extra-boolean-cast
   const child = !!isLoading ? <LoadingSpinner /> : children
-  if (to !== '' && typeof to === 'string') {
+  if (to !== "" && typeof to === "string") {
     return (
       <NavLink to={to} className='inline-block'>
         <ButtonStyles type={type} kind={kind} {...props}>
@@ -63,10 +63,10 @@ const Button = ({ type = 'button', onClick = () => {}, children, kind = 'primary
 }
 
 Button.propTypes = {
-  type: PropTypes.oneOf(['button', 'submit']),
+  type: PropTypes.oneOf(["button", "submit"]),
   onClick: PropTypes.func,
   children: PropTypes.node,
-  kind: PropTypes.oneOf(['primary', 'secondary', 'ghost'])
+  kind: PropTypes.oneOf(["primary", "secondary", "ghost"])
 }
 
 export default Button

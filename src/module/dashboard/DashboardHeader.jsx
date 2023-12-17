@@ -1,5 +1,5 @@
-import { Button } from '@/components/button'
-import styled from 'styled-components'
+import styled from "styled-components"
+import { Button } from "@/components/button"
 const DashboardHeaderStyles = styled.div`
   background-color: white;
   padding: 20px;

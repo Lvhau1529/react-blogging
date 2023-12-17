@@ -1,25 +1,24 @@
-
-import { NavLink } from 'react-router-dom'
-import styled from 'styled-components'
-import { Button } from '../button'
-import { useAuth } from '../../contexts/auth-context'
+import {NavLink} from "react-router-dom"
+import styled from "styled-components"
+import {Button} from "../button"
+import {useAuth} from "../../contexts/auth-context"
 const menuLinks = [
   {
-    url: '/',
-    title: 'Home'
+    url: "/",
+    title: "Home"
   },
   {
-    url: '/blog',
-    title: 'Blog'
+    url: "/blog",
+    title: "Blog"
   },
   {
-    url: '/contact',
-    title: 'Contact'
+    url: "/contact",
+    title: "Contact"
   }
 ]
 
 const Header = () => {
-  const { userInfo } = useAuth()
+  const {userInfo} = useAuth()
   return (
     <HeaderStyles>
       <div className='container'>
@@ -37,13 +36,21 @@ const Header = () => {
             ))}
           </ul>
           {!userInfo ? (
-            <Button type='button' height='56px' className='header-button' to='/sign-in'>
+            <Button
+              type='button'
+              height='56px'
+              className='header-button'
+              to='/sign-in'>
               Login
             </Button>
           ) : (
             <div className='header-auth'>
-              <Button type='button' height='56px' className='header-button' to='/dashboard'>
-                Dashboard {userInfo?.displayName}
+              <Button
+                type='button'
+                height='56px'
+                className='header-button'
+                to='/dashboard'>
+                Dashboard
               </Button>
             </div>
           )}

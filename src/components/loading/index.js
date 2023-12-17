@@ -1,1 +1,1 @@
-export { default as LoadingSpiner } from './LoadingSpiner'
+export { default as LoadingSpiner } from "./LoadingSpiner"

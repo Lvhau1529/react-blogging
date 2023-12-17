@@ -1,7 +1,7 @@
-import { Outlet } from 'react-router-dom'
-import styled from 'styled-components'
-import DashboardHeader from './DashboardHeader'
-import Sidebar from './Sidebar'
+import { Outlet } from "react-router-dom"
+import styled from "styled-components"
+import DashboardHeader from "./DashboardHeader"
+import Sidebar from "./Sidebar"
 const DashboardStyles = styled.div`
   max-width: 1600px;
   margin: 0 auto;
@@ -9,7 +9,7 @@ const DashboardStyles = styled.div`
     &-heading {
       font-weight: bold;
       font-size: 36px;
-      margin-bottom: 40px;
+      margin-bottom: 10px;
       color: ${(props) => props.theme.primary};
       letter-spacing: 1px;
     }
