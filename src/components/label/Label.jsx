@@ -1,4 +1,4 @@
-const Label = ({ htmlFor = '', children, ...props }) => {
+const Label = ({ htmlFor = "", children, ...props }) => {
   return (
     <>
       <label htmlFor={htmlFor} {...props} className='text-grayDark cursor-pointer font-medium'>

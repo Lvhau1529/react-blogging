@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components"
 
 const SpinnerStyles = styled.div`
   width: ${(props) => props.size};
@@ -15,7 +15,7 @@ const SpinnerStyles = styled.div`
     }
   }
 `
-const LoadingSpinner = ({ size = '40px', bordersize = '5px' }) => {
+const LoadingSpinner = ({ size = "40px", bordersize = "5px" }) => {
   return <SpinnerStyles size={size} bordersize={bordersize}></SpinnerStyles>
 }
 

@@ -1,13 +1,13 @@
-import {IconEyeClose, IconEyeOpen} from '../icons/index'
-import {useState} from 'react'
-import Input from './Input'
+import {useState} from "react"
+import {IconEyeClose, IconEyeOpen} from "../icons/index"
+import Input from "./Input"
 const InputPasswordToggle = ({control}) => {
   const [togglePassword, setTogglePassword] = useState(false)
   if (!control) return null
   return (
     <>
       <Input
-        type={togglePassword ? 'text' : 'password'}
+        type={togglePassword ? "text" : "password"}
         name='password'
         placeholder='Enter your password'
         control={control}>

@@ -1,7 +1,7 @@
-import { Outlet } from 'react-router-dom'
-import styled from 'styled-components'
-import DashboardHeader from './DashboardHeader'
-import Sidebar from './Sidebar'
+import { Outlet } from "react-router-dom"
+import styled from "styled-components"
+import DashboardHeader from "./DashboardHeader"
+import Sidebar from "./Sidebar"
 const DashboardStyles = styled.div`
   max-width: 1600px;
   margin: 0 auto;

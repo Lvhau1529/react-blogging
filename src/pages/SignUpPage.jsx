@@ -1,31 +1,31 @@
-import {Label} from '../components/label'
-import Input from '../components/input/Input'
-import {useForm} from 'react-hook-form'
-import {Field} from '../components/field'
-import {useEffect} from 'react'
-import {Button} from '../components/button'
-import {yupResolver} from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import {toast} from 'react-toastify'
-import {createUserWithEmailAndPassword, updateProfile} from 'firebase/auth'
-import {auth, db} from '../firebase-app/firebase-config'
-import AuthenticationPage from './AuthenticationPage'
-import {NavLink, useNavigate} from 'react-router-dom'
-import {doc, serverTimestamp, setDoc} from 'firebase/firestore'
-import slugify from 'slugify'
-import {userRole, userStatus} from '@/utils/constants'
-import InputPasswordToggle from '../components/input/InputPasswordToggle'
+import {useForm} from "react-hook-form"
+import {useEffect} from "react"
+import {yupResolver} from "@hookform/resolvers/yup"
+import * as yup from "yup"
+import {toast} from "react-toastify"
+import {createUserWithEmailAndPassword, updateProfile} from "firebase/auth"
+import {NavLink, useNavigate} from "react-router-dom"
+import {doc, serverTimestamp, setDoc} from "firebase/firestore"
+import slugify from "slugify"
+import {auth, db} from "../firebase-app/firebase-config"
+import {Button} from "../components/button"
+import {Field} from "../components/field"
+import Input from "../components/input/Input"
+import {Label} from "../components/label"
+import InputPasswordToggle from "../components/input/InputPasswordToggle"
+import AuthenticationPage from "./AuthenticationPage"
+import {userRole, userStatus} from "@/utils/constants"
 
 const schema = yup.object({
-  fullname: yup.string().required('Please enter your fullname'),
+  fullname: yup.string().required("Please enter your fullname"),
   email: yup
     .string()
-    .email('Please enter valid email address')
-    .required('Please enter your email address'),
+    .email("Please enter valid email address")
+    .required("Please enter your email address"),
   password: yup
     .string()
-    .min(8, 'Your password must be at least 8 characters or greater')
-    .required('Please enter your password')
+    .min(8, "Your password must be at least 8 characters or greater")
+    .required("Please enter your password")
 })
 
 const SignUpPage = () => {
@@ -35,7 +35,7 @@ const SignUpPage = () => {
     handleSubmit,
     formState: {errors, isValid, isSubmitting}
   } = useForm({
-    mode: 'onChange',
+    mode: "onChange",
     resolver: yupResolver(schema)
   })
   const handleSignUp = async (values) => {
@@ -44,23 +44,23 @@ const SignUpPage = () => {
     await updateProfile(auth.currentUser, {
       displayName: values.fullname,
       photoURL:
-        'https://images.unsplash.com/photo-1490750967868-88aa4486c946?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80'
+        "https://images.unsplash.com/photo-1490750967868-88aa4486c946?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
     })
 
-    await setDoc(doc(db, 'users', auth.currentUser.uid), {
+    await setDoc(doc(db, "users", auth.currentUser.uid), {
       fullname: values.fullname,
       email: values.email,
       password: values.password,
       username: slugify(values.fullname, {lower: true}),
       avatar:
-        'https://images.unsplash.com/photo-1490750967868-88aa4486c946?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
+        "https://images.unsplash.com/photo-1490750967868-88aa4486c946?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
       status: userStatus.ACTIVE,
       role: userRole.USER,
       createdAt: serverTimestamp()
     })
 
-    toast.success('Register successfully!!!')
-    navigate('/')
+    toast.success("Register successfully!!!")
+    navigate("/")
   }
   useEffect(() => {
     const arrErroes = Object.values(errors)
@@ -72,7 +72,7 @@ const SignUpPage = () => {
     }
   }, [errors])
   useEffect(() => {
-    document.title = 'Register Page'
+    document.title = "Register Page"
   }, [])
   return (
     <AuthenticationPage>
@@ -103,7 +103,7 @@ const SignUpPage = () => {
           <InputPasswordToggle control={control}></InputPasswordToggle>
         </Field>
         <div className='have-account'>
-          You already have an account? <NavLink to={'/sign-in'}>Login</NavLink>{' '}
+          You already have an account? <NavLink to={"/sign-in"}>Login</NavLink>{" "}
         </div>
         <Button
           type='submit'

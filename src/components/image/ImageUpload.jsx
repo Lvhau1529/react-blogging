@@ -1,11 +1,11 @@
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types"
 
 const ImageUpload = (props) => {
   const {
     name,
-    className = '',
+    className = "",
     progress = 0,
-    image = '',
+    image = "",
     handleDeleteImage = () => {},
     ...rest
   } = props

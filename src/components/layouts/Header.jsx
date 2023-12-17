@@ -1,19 +1,19 @@
-import {NavLink} from 'react-router-dom'
-import styled from 'styled-components'
-import {Button} from '../button'
-import {useAuth} from '../../contexts/auth-context'
+import {NavLink} from "react-router-dom"
+import styled from "styled-components"
+import {Button} from "../button"
+import {useAuth} from "../../contexts/auth-context"
 const menuLinks = [
   {
-    url: '/',
-    title: 'Home'
+    url: "/",
+    title: "Home"
   },
   {
-    url: '/blog',
-    title: 'Blog'
+    url: "/blog",
+    title: "Blog"
   },
   {
-    url: '/contact',
-    title: 'Contact'
+    url: "/contact",
+    title: "Contact"
   }
 ]
 
