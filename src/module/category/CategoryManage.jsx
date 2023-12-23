@@ -1,7 +1,18 @@
 import { useEffect, useState } from "react"
-import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore"
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  limit,
+  onSnapshot,
+  query,
+  startAfter,
+  where
+} from "firebase/firestore"
 import { useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
+import { debounce } from "lodash"
 import { categoryStatus } from "@/utils/constants"
 import { LabelStatus } from "@/components/label"
 import { Button } from "@/components/button"
@@ -10,16 +21,34 @@ import { ActionDelete, ActionEdit, ActionView } from "@/components/action"
 import Table from "@/components/table/Table"
 import { db } from "@/firebase-app/firebase-config"
 
+const CATEGORY_PER_PAGE = 10
+
 const CategoryManage = () => {
-  const navigate = useNavigate()
   const [categoryList, setCategoryList] = useState([])
-  const [total, setTotal] = useState(1)
+  const navigate = useNavigate()
+  const [filter, setFilter] = useState(undefined)
+  const [lastDoc, setLastDoc] = useState()
+  const [total, setTotal] = useState(0)
 
   useEffect(() => {
     async function fetchData() {
       const colRef = collection(db, "categories")
+      const newRef = filter
+        ? query(
+            colRef,
+            where("name", ">=", filter),
+            where("name", "<=", filter + "utf8")
+          )
+        : query(colRef, limit(CATEGORY_PER_PAGE))
+      const documentSnapshots = await getDocs(newRef)
+      const lastVisible =
+        documentSnapshots.docs[documentSnapshots.docs.length - 1]
 
       onSnapshot(colRef, (snapshot) => {
+        setTotal(snapshot.size)
+      })
+
+      onSnapshot(newRef, (snapshot) => {
         let results = []
         snapshot.forEach((doc) => {
           results.push({
@@ -29,9 +58,10 @@ const CategoryManage = () => {
         })
         setCategoryList(results)
       })
+      setLastDoc(lastVisible)
     }
     fetchData()
-  }, [])
+  }, [filter])
 
   const handleDeleteCategory = async (docId) => {
     const colRef = doc(db, "categories", docId)
@@ -51,9 +81,32 @@ const CategoryManage = () => {
     })
   }
 
-  const handleInputFilter = () => {}
+  const handleInputFilter = debounce((e) => {
+    setFilter(e.target.value)
+  }, 500)
 
-  const handleLoadMoreCategory = () => {}
+  const handleLoadMoreCategory = async () => {
+    const nextRef = query(
+      collection(db, "categories"),
+      startAfter(lastDoc),
+      limit(CATEGORY_PER_PAGE)
+    )
+
+    onSnapshot(nextRef, (snapshot) => {
+      let results = []
+      snapshot.forEach((doc) => {
+        results.push({
+          id: doc.id,
+          ...doc.data()
+        })
+      })
+      setCategoryList([...categoryList, ...results])
+    })
+    const documentSnapshots = await getDocs(nextRef)
+    const lastVisible =
+      documentSnapshots.docs[documentSnapshots.docs.length - 1]
+    setLastDoc(lastVisible)
+  }
 
   return (
     <div>
