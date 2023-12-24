@@ -1,0 +1,22 @@
+import UserTable from "./UserTable";
+import { Button } from "@/components/button";
+import DashboardHeading from "@/module/dashboard/DashboardHeading";
+
+const UserManage = () => {
+  return (
+    <div>
+      <DashboardHeading
+        title="Users"
+        desc="Manage your user"
+      ></DashboardHeading>
+      <div className="flex justify-end mb-10">
+        <Button kind="ghost" to="/manage/add-user">
+          Add new user
+        </Button>
+      </div>
+      <UserTable></UserTable>
+    </div>
+  );
+};
+
+export default UserManage;
