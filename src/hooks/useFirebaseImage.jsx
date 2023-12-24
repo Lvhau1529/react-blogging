@@ -6,7 +6,7 @@ import {
   uploadBytesResumable
 } from "firebase/storage"
 import {useState} from "react"
-import {useAuth} from "@/contexts/auth-context"
+// import {useAuth} from "@/contexts/auth-context"
 // import Swal from 'sweetalert2'
 // import {userRole} from '@/utils/constants'
 
@@ -46,7 +46,7 @@ export default function useFirebaseImage(
         }
       },
       (error) => {
-        console.log("Error")
+        console.log("Error", error)
         setImage("")
       },
       () => {

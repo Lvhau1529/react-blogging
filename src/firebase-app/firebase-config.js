@@ -3,7 +3,7 @@ import {getFirestore} from "firebase/firestore"
 import {getAuth} from "firebase/auth"
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCqBp481PhDnbtdlovMBOGMprmfQs7OEZ4",
+  apiKey: import.meta.env.VITE_FIRE_BASE_KEY,
   authDomain: "monkey-blogging-b36aa.firebaseapp.com",
   projectId: "monkey-blogging-b36aa",
   storageBucket: "monkey-blogging-b36aa.appspot.com",
