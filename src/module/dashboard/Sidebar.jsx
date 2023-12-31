@@ -1,32 +1,8 @@
 import { signOut } from "firebase/auth"
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import styled from "styled-components"
 import { auth } from "@/firebase-app/firebase-config"
 
-const SidebarStyles = styled.div`
-  width: 300px;
-  background: #ffffff;
-  box-shadow: 10px 10px 20px rgba(218, 213, 213, 0.15);
-  border-radius: 12px;
-  .menu-item {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 14px 20px;
-    font-weight: 500;
-    color: ${(props) => props.theme.gray80};
-    margin-bottom: 20px;
-    cursor: pointer;
-    &.active,
-    &:hover {
-      background: #f1fbf7;
-      color: ${(props) => props.theme.primary};
-    }
-  }
-  @media screen and (max-width: 1023.98px) {
-    display: none;
-  }
-`
 const sidebarLinks = [
   {
     title: "Dashboard",
@@ -121,11 +97,17 @@ const sidebarLinks = [
           d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
         />
       </svg>
-    ),
-    onClick: () => signOut(auth)
+    )
   }
 ]
 const Sidebar = () => {
+  const navigate = useNavigate()
+
+  const handleSignOut = () => {
+    signOut(auth)
+    navigate("/")
+  }
+
   return (
     <SidebarStyles className="sidebar">
       {sidebarLinks.map((link) => {
@@ -136,6 +118,14 @@ const Sidebar = () => {
               <span className="menu-text">{link.title}</span>
             </div>
           )
+        if (link.title === "Logout") {
+          return (
+            <div className="menu-item" onClick={handleSignOut} key={link.title}>
+              <span className="menu-icon">{link.icon}</span>
+              <span className="menu-text">{link.title}</span>
+            </div>
+          )
+        }
         return (
           <NavLink to={link.url} className="menu-item" key={link.title}>
             <span className="menu-icon">{link.icon}</span>
@@ -147,4 +137,28 @@ const Sidebar = () => {
   )
 }
 
+const SidebarStyles = styled.div`
+  width: 300px;
+  background: #ffffff;
+  box-shadow: 10px 10px 20px rgba(218, 213, 213, 0.15);
+  border-radius: 12px;
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 14px 20px;
+    font-weight: 500;
+    color: ${(props) => props.theme.gray80};
+    margin-bottom: 20px;
+    cursor: pointer;
+    &.active,
+    &:hover {
+      background: #f1fbf7;
+      color: ${(props) => props.theme.primary};
+    }
+  }
+  @media screen and (max-width: 1023.98px) {
+    display: none;
+  }
+`
 export default Sidebar

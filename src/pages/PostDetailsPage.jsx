@@ -1,45 +1,45 @@
-import styled from "styled-components";
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
-import PageNotFound from "./PageNotFound";
-// import PostRelated from "@/module/post/PostRelated";
-import PostMeta from "@/module/post/PostMeta";
-import PostImage from "@/module/post/PostImage";
-import PostCategory from "@/module/post/PostCategory";
-import Layout from "@/components/layouts/Layout";
-// import AuthorBox from "@/components/author/AuthorBox";
-import { db } from "@/firebase-app/firebase-config";
-import { useAuth } from "@/contexts/auth-context";
-import { userRole } from "@/utils/constants";
+import styled from "styled-components"
+import { useEffect, useState } from "react"
+import { Link, useParams } from "react-router-dom"
+import { collection, onSnapshot, query, where } from "firebase/firestore"
+import PageNotFound from "./PageNotFound"
+import PostRelated from "@/module/post/PostRelated"
+import PostMeta from "@/module/post/PostMeta"
+import PostImage from "@/module/post/PostImage"
+import PostCategory from "@/module/post/PostCategory"
+import Layout from "@/components/layouts/Layout"
+import AuthorBox from "@/components/author/AuthorBox"
+import { db } from "@/firebase-app/firebase-config"
+import { useAuth } from "@/contexts/auth-context"
+import { userRole } from "@/utils/constants"
 
 const PostDetailsPage = () => {
-  const { slug } = useParams();
-  const [postInfo, setPostInfo] = useState({});
+  const { slug } = useParams()
+  const [postInfo, setPostInfo] = useState({})
   useEffect(() => {
     async function fetchData() {
-      if (!slug) return;
-      const colRef = query(collection(db, "posts"), where("slug", "==", slug));
+      if (!slug) return
+      const colRef = query(collection(db, "posts"), where("slug", "==", slug))
       onSnapshot(colRef, (snapshot) => {
         snapshot.forEach((doc) => {
           doc.data() &&
             setPostInfo({
               id: doc.id,
-              ...doc.data(),
-            });
-        });
-      });
+              ...doc.data()
+            })
+        })
+      })
     }
-    fetchData();
-  }, [slug]);
-  
+    fetchData()
+  }, [slug])
+
   useEffect(() => {
-    document.body.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [slug]);
-  const { userInfo } = useAuth();
-  if (!slug) return <PageNotFound />;
-  if (!postInfo.title) return null;
-  // const { user } = postInfo;
+    document.body.scrollIntoView({ behavior: "smooth", block: "start" })
+  }, [slug])
+  const { userInfo } = useAuth()
+  if (!slug) return <PageNotFound />
+  if (!postInfo.title) return null
+  const { user } = postInfo;
 
   return (
     <PostDetailsPageStyles>
@@ -48,8 +48,7 @@ const PostDetailsPage = () => {
           <div className="post-header">
             <PostImage
               url={postInfo.image}
-              className="post-feature"
-            ></PostImage>
+              className="post-feature"></PostImage>
             <div className="post-info">
               <PostCategory className="mb-6" to={postInfo.category?.slug}>
                 {postInfo.category?.name}
@@ -60,8 +59,7 @@ const PostDetailsPage = () => {
               {userInfo?.role === userRole.ADMIN && (
                 <Link
                   to={`/manage/update-post?id=${postInfo.id}`}
-                  className="inline-block px-4 py-2 mt-5 text-sm border border-gray-400 rounded-md"
-                >
+                  className="inline-block px-4 py-2 mt-5 text-sm border border-gray-400 rounded-md">
                   Edit post
                 </Link>
               )}
@@ -72,17 +70,16 @@ const PostDetailsPage = () => {
               className="entry-content"
               // Prevent XSS Attack recommen from React Docs
               dangerouslySetInnerHTML={{
-                __html: postInfo.content || "",
-              }}
-            ></div>
-            {/* <AuthorBox userId={user.id}></AuthorBox> */}
+                __html: postInfo.content || ""
+              }}></div>
+            <AuthorBox userId={user.id}></AuthorBox>
           </div>
-          {/* <PostRelated categoryId={postInfo?.category?.id}></PostRelated> */}
+          <PostRelated postInfoId={postInfo.id} categoryId={postInfo?.category?.id} />
         </div>
       </Layout>
     </PostDetailsPageStyles>
-  );
-};
+  )
+}
 
 const PostDetailsPageStyles = styled.div`
   padding-bottom: 100px;
@@ -169,6 +166,6 @@ const PostDetailsPageStyles = styled.div`
       }
     }
   }
-`;
+`
 
-export default PostDetailsPage;
+export default PostDetailsPage
