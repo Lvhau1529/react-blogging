@@ -15,7 +15,7 @@ import axios from "axios"
 import slugify from "slugify"
 import Swal from "sweetalert2"
 import ReactQuill, { Quill } from "react-quill"
-import ImageUploader from "quill-image-uploader";
+import ImageUploader from "quill-image-uploader"
 import { useAuth } from "@/contexts/auth-context"
 import useFirebaseImage from "@/hooks/useFirebaseImage"
 import { Button } from "@/components/button"
@@ -32,7 +32,7 @@ import { postStatus, userRole } from "@/utils/constants"
 import "react-quill/dist/quill.snow.css"
 import { imgbbAPI } from "@/config/apiConfig"
 
-Quill.register("modules/imageUploader", ImageUploader);
+Quill.register("modules/imageUploader", ImageUploader)
 
 const PostUpdate = () => {
   const { userInfo } = useAuth()
@@ -67,6 +67,7 @@ const PostUpdate = () => {
         [{ header: 1 }, { header: 2 }], // custom button values
         [{ list: "ordered" }, { list: "bullet" }],
         [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        [{ align: [] }],
         ["link", "image"]
       ],
       imageUploader: {
